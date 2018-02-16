@@ -9,7 +9,7 @@ class PingServer(ping_pb2.PingPongServicer):
     def ping(self, request, context):
         # TODO
         print("Encode:\n", request)
-        return None
+        return ping_pb2.Response(data="Pong!")
 
 def run(host, port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
@@ -26,5 +26,7 @@ def run(host, port):
         server.stop(0)
 
 
-if __name__ == '__main__':
+if _name_ == '__main__':
     run('0.0.0.0', 3000)
+	
+	
