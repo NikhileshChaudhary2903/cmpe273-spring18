@@ -4,26 +4,21 @@ virtualenv -p python3 my-venv
 pip3 install -r requirements.txt
 
 
+To run chat server 
 
-How to run Chat server
-python3 server.py
-How to run a Chat client
-python3 client.py [username]
+run this command 
 
-Expected Output
-
-Bob's client
-python3 client.py Bob
-User[Bob] Connected to the chat server.
-[Bob] > 
-[Alice]: Hi from Alice.
-[Smith]: Hi from Smith.
-[Bob] > Hello World
+$ python3 server.py
 
 
-Alice's client
-python3 client.py Bob
-User[Alice] Connected to the chat server. 
-[Alice] > Hi from Alice.
-[Smith]: Hi from Smith.
-[Bob]: Hello World
+TO start client chats 
+
+run 
+
+$ python3 zmqchat.py username
+
+in diff client windows/terminals to take effect
+
+
+
+
