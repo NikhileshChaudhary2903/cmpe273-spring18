@@ -1,10 +1,10 @@
 from flask import Flask
 from flask import request
-from flask import jsonify
+from flask import jsonify,json
 app = Flask(__name__)
 
-users = [{'id': 1, 'name': u'Leo Messi'}, {'id': 2,
-         'name': u'Cristiano Ronaldo'}]
+usersList = []
+userNo = 0
 
 
 @app.route('/')
@@ -12,31 +12,49 @@ def hello():
     return 'Hello World!'
 
 
-@app.route('/users/<int:user_id>', methods=['GET', 'DELETE'])
-def get_user(user_id):
-    if request.method == 'GET':
-        user = [user for user in users if user['id'] == user_id]
-        if len(user) == 0:
-            abort(404)
-        return (jsonify({'user': user[0]}), 200)
-    elif request.method == 'DELETE':
-
-        user = [user for user in users if user['id'] == user_id]
-        if len(user) == 0:
-            abort(404)
-        users.remove(user[0])
-        return (jsonify({'result': True}), 204)
-
-
-@app.route('/users', methods=['GET'])
-def get_users():
-    return jsonify({'users': users})
-
-
 @app.route('/users', methods=['POST'])
-def create_user():
-    if not request.json or not 'name' in request.json:
-        abort(400)
-    user = {'id': users[-1]['id'] + 1, 'name': request.json['name']}
-    users.append(user)
-    return (jsonify({'user': user}), 201)
+def users():
+    name = request.form["name"]
+    global userNo
+    userNo += 1
+    user = {
+        'id' : userNo,
+        'name' : name
+    }
+    usersList.append(user) 
+    return json.dumps(user, indent=4, separators=(',', ':')), 201
+
+@app.route('/users/<userid>')
+def getUsers(userid):
+    userName = ''
+    for i in range(len(usersList)):
+        if(int(usersList[i]['id']) == int(userid)):
+            userName = str(usersList[i]['name'])
+            user = {
+            'id' : userid,
+            'name' : userName
+            }
+        else:
+            user = {
+                'message' : 'User with given userid isnt available'
+            }
+    return json.dumps(user, indent=4, separators=(',', ':'))
+
+@app.route('/users/<userid>', methods=['DELETE'])
+def deleteUsers(userid):
+    userName = ''
+    for i in range(len(usersList)):
+        if(int(usersList[i]['id']) == int(userid)):
+            userName = str(usersList[i]['name'])
+            user = {
+                'id' : userid,
+                'name' : userName
+            }
+            usersList.pop(i)
+            break
+        else:
+            user = {
+                'message' : 'User with given userid cannot be deleted'
+            }
+    return '', 204
+
